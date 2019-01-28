@@ -1,7 +1,7 @@
 from Render_Engine.display_manager import *
 from Render_Engine.loader import Loader
 from Render_Engine.renderer import Renderer
-
+from Shaders.static_shader import StaticShader
 
 # Initialize Pygame
 pygame.init()
@@ -10,9 +10,14 @@ pygame.init()
 dm = DisplayManager()
 dm.create_display()
 
+# Creates a loader to load model data
 loader = Loader()
 
+# Initializes the renderer
 renderer = Renderer()
+
+# Loads shaders
+static_shader = StaticShader()
 
 # Test rectangle
 vertices = [
@@ -27,6 +32,7 @@ indices = [
     3, 1, 2
 ]
 
+# Takes model data and turns in into a model ready to be rendered
 model = loader.load_to_vao(vertices, indices)
 
 # Beginning!
@@ -40,6 +46,7 @@ if __name__ == "__main__":
 
             # When window is closed
             if event.type == pygame.QUIT:
+                static_shader.clean_up()
                 loader.clean_up()
                 dm.close_display()
                 pygame.quit()
@@ -48,8 +55,14 @@ if __name__ == "__main__":
         # Prepares OpenGL context
         renderer.prepare()
 
+        # Starts the shader program
+        static_shader.start()
+
         # Renders a model
         renderer.render(model)
+
+        # Stops te shader program
+        static_shader.stop()
 
         # Update the Pygame display
         dm.update_display()
