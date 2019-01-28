@@ -15,6 +15,7 @@ class Renderer:
     def render(model):
         glBindVertexArray(model.vao_id)
         glEnableVertexAttribArray(0)
-        glDrawArrays(GL_TRIANGLES, 0, model.vertex_count)
+        # This is slightly different from LWJGL's glDrawElements, as it needs the vertices also
+        glDrawElements(GL_TRIANGLES, model.vertex_count, GL_UNSIGNED_INT, model.vertices)
         glDisableVertexAttribArray(0)
         glBindVertexArray(0)

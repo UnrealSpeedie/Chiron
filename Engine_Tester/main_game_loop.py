@@ -1,5 +1,4 @@
 from Render_Engine.display_manager import *
-#from Render_Engine.raw_model import RawModel
 from Render_Engine.loader import Loader
 from Render_Engine.renderer import Renderer
 
@@ -11,25 +10,24 @@ pygame.init()
 dm = DisplayManager()
 dm.create_display()
 
-#rm = RawModel(1, 0)
-
 loader = Loader()
 
 renderer = Renderer()
 
 # Test rectangle
 vertices = [
-    # Left bottom triangle
     -0.5, 0.5, 0,
     -0.5, -0.5, 0,
     0.5, -0.5, 0,
-    # Right top triangle
-    0.5, -0.5, 0,
-    0.5, 0.5, 0,
-    -0.5, 0.5, 0
+    0.5, 0.5, 0
 ]
 
-model = loader.load_to_vao(vertices)
+indices = [
+    0, 1, 3,
+    3, 1, 2
+]
+
+model = loader.load_to_vao(vertices, indices)
 
 # Beginning!
 if __name__ == "__main__":
