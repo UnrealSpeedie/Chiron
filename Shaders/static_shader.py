@@ -10,3 +10,4 @@ class StaticShader(ShaderProgram):
 
     def bind_attributes(self):
         super().bind_attribute(0, "position")
+        super().bind_attribute(1, "textureCoords")

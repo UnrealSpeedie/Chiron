@@ -2,6 +2,8 @@ from Render_Engine.display_manager import *
 from Render_Engine.loader import Loader
 from Render_Engine.renderer import Renderer
 from Shaders.static_shader import StaticShader
+from Textures.model_texture import ModelTexture
+from Models.textured_model import TexturedModel
 
 # Initialize Pygame
 pygame.init()
@@ -32,8 +34,18 @@ indices = [
     3, 1, 2
 ]
 
+texture_coords = [
+    0, 0,
+    0, 1,
+    1, 1,
+    1, 0
+]
+
 # Takes model data and turns in into a model ready to be rendered
-model = loader.load_to_vao(vertices, indices)
+model = loader.load_to_vao(vertices, texture_coords, indices)
+
+texture = ModelTexture(loader.load_texture("../res/image.png"))
+textured_model = TexturedModel(model, texture)
 
 # Beginning!
 if __name__ == "__main__":
@@ -59,7 +71,7 @@ if __name__ == "__main__":
         static_shader.start()
 
         # Renders a model
-        renderer.render(model)
+        renderer.render(textured_model)
 
         # Stops te shader program
         static_shader.stop()
