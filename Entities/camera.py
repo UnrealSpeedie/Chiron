@@ -10,7 +10,7 @@ class Camera:
         self._yaw = 0
         self._roll = 0
 
-        self._move_speed = 0.02
+        self._move_speed = 0.2
 
         self._speed = 0
         self._strafe = 0

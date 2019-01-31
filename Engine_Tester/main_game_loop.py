@@ -6,6 +6,7 @@ from Textures.model_texture import ModelTexture
 from Models.textured_model import TexturedModel
 from Entities.entity import Entity
 from Entities.camera import Camera
+from Render_Engine.obj_loader import OBJLoader
 
 
 # Initialize Pygame
@@ -47,6 +48,7 @@ texture_coords = [
 """
 
 # Test cube
+"""
 vertices = [
     -0.5, 0.5, -0.5,
     -0.5, -0.5, -0.5,
@@ -120,13 +122,14 @@ indices = [
     20, 21, 23,
     23, 21, 22
 ]
+"""
 
 # Takes model data and turns in into a model ready to be rendered
-model = loader.load_to_vao(vertices, texture_coords, indices)
+model = OBJLoader.load_obj_model("stall", loader)
 
-static_model = TexturedModel(model, ModelTexture(loader.load_texture("../res/image.png")))
+static_model = TexturedModel(model, ModelTexture(loader.load_texture("stall_texture")))
 
-entity = Entity(static_model, [0, 0, -5], 0, 0, 0, 1)
+entity = Entity(static_model, [0, 0, -50], 0, 0, 0, 1)
 
 camera = Camera()
 
@@ -190,7 +193,7 @@ if __name__ == "__main__":
         # Renders a model
         renderer.render(entity, shader)
 
-        entity.increase_rotation(1, 1, 0)
+        entity.increase_rotation(0, 1, 0)
 
         # Stops te shader program
         shader.stop()
