@@ -5,7 +5,7 @@ from pygame.locals import *
 class DisplayManager:
     # Basic attributes of Pygame display
     _display = None
-    _display_size = (800, 600)
+    _display_size = (960, 600)
     _aspect_ratio = _display_size[0] / _display_size[1]
     _display_title = "3D Python Game"
 
@@ -30,3 +30,7 @@ class DisplayManager:
     def close_display():
         # Used to destroy the Pygame display
         pygame.display.quit()
+
+    @property
+    def aspect_ratio(self):
+        return DisplayManager._aspect_ratio
