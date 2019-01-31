@@ -10,19 +10,14 @@ class Camera:
         self._yaw = 0
         self._roll = 0
 
-    def move(self, event):
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
-                self._position.z -= 0.1
+        self._move_speed = 0.02
 
-            if event.key == pygame.K_s:
-                self._position.z += 0.1
+        self._speed = 0
+        self._strafe = 0
 
-            if event.key == pygame.K_a:
-                self._position.x -= 0.1
-
-            if event.key == pygame.K_d:
-                self._position.x += 0.1
+    def move(self):
+        self.position.z += self._speed
+        self.position.x += self._strafe
 
     @property
     def position(self):
@@ -39,3 +34,23 @@ class Camera:
     @property
     def roll(self):
         return self._roll
+
+    @property
+    def move_speed(self):
+        return self._move_speed
+
+    @property
+    def speed(self):
+        return self._speed
+
+    @property
+    def strafe(self):
+        return self._strafe
+
+    @speed.setter
+    def speed(self, value):
+        self._speed = value
+
+    @strafe.setter
+    def strafe(self, value):
+        self._strafe = value

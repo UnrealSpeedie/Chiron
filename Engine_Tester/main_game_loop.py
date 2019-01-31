@@ -12,8 +12,8 @@ from Entities.camera import Camera
 pygame.init()
 
 # Create the Pygame display and OpenGl context
-dm = DisplayManager()
-dm.create_display()
+display = DisplayManager()
+display.create_display()
 
 # Creates a loader to load model data
 loader = Loader()
@@ -25,6 +25,7 @@ shader = StaticShader()
 renderer = Renderer(shader)
 
 # Test rectangle
+"""
 vertices = [
     -0.5, 0.5, 0,
     -0.5, -0.5, 0,
@@ -43,13 +44,89 @@ texture_coords = [
     1, 1,
     1, 0
 ]
+"""
+
+# Test cube
+vertices = [
+    -0.5, 0.5, -0.5,
+    -0.5, -0.5, -0.5,
+    0.5, -0.5, -0.5,
+    0.5, 0.5, -0.5,
+
+    -0.5, 0.5, 0.5,
+    -0.5, -0.5, 0.5,
+    0.5, -0.5, 0.5,
+    0.5, 0.5, 0.5,
+
+    0.5, 0.5, -0.5,
+    0.5, -0.5, -0.5,
+    0.5, -0.5, 0.5,
+    0.5, 0.5, 0.5,
+
+    -0.5, 0.5, -0.5,
+    -0.5, -0.5, -0.5,
+    -0.5, -0.5, 0.5,
+    -0.5, 0.5, 0.5,
+
+    -0.5, 0.5, 0.5,
+    -0.5, 0.5, -0.5,
+    0.5, 0.5, -0.5,
+    0.5, 0.5, 0.5,
+
+    -0.5, -0.5, 0.5,
+    -0.5, -0.5, -0.5,
+    0.5, -0.5, -0.5,
+    0.5, -0.5, 0.5
+]
+
+texture_coords = [
+    0, 0,
+    0, 1,
+    1, 1,
+    1, 0,
+    0, 0,
+    0, 1,
+    1, 1,
+    1, 0,
+    0, 0,
+    0, 1,
+    1, 1,
+    1, 0,
+    0, 0,
+    0, 1,
+    1, 1,
+    1, 0,
+    0, 0,
+    0, 1,
+    1, 1,
+    1, 0,
+    0, 0,
+    0, 1,
+    1, 1,
+    1, 0
+]
+
+indices = [
+    0, 1, 3,
+    3, 1, 2,
+    4, 5, 7,
+    7, 5, 6,
+    8, 9, 11,
+    11, 9, 10,
+    12, 13, 15,
+    15, 13, 14,
+    16, 17, 19,
+    19, 17, 18,
+    20, 21, 23,
+    23, 21, 22
+]
 
 # Takes model data and turns in into a model ready to be rendered
 model = loader.load_to_vao(vertices, texture_coords, indices)
 
 static_model = TexturedModel(model, ModelTexture(loader.load_texture("../res/image.png")))
 
-entity = Entity(static_model, [0, 0, -1], 0, 0, 0, 1)
+entity = Entity(static_model, [0, 0, -5], 0, 0, 0, 1)
 
 camera = Camera()
 
@@ -62,16 +139,44 @@ if __name__ == "__main__":
         # Event logic
         for event in pygame.event.get():
 
-            # Camera movement
-            camera.move(event)
-
             # When window is closed
             if event.type == pygame.QUIT:
                 shader.clean_up()
                 loader.clean_up()
-                dm.close_display()
+                display.close_display()
                 pygame.quit()
                 quit()
+
+            # Key press logic
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    camera.speed = -camera.move_speed
+
+                if event.key == pygame.K_s:
+                    camera.speed = camera.move_speed
+
+                if event.key == pygame.K_a:
+                    camera.strafe = -camera.move_speed
+
+                if event.key == pygame.K_d:
+                    camera.strafe = camera.move_speed
+
+            # Key release logic
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_w:
+                    camera.speed = 0
+
+                if event.key == pygame.K_s:
+                    camera.speed = 0
+
+                if event.key == pygame.K_a:
+                    camera.strafe = 0
+
+                if event.key == pygame.K_d:
+                    camera.strafe = 0
+
+        # Camera movement
+        camera.move()
 
         # Prepares OpenGL context
         renderer.prepare()
@@ -84,13 +189,14 @@ if __name__ == "__main__":
 
         # Renders a model
         renderer.render(entity, shader)
-        #entity.increase_position(0, 0, -0.1)
+
+        entity.increase_rotation(1, 1, 0)
 
         # Stops te shader program
         shader.stop()
 
         # Update the Pygame display
-        dm.update_display()
+        display.update_display()
 
         # Pumps event messages from event queue
         pygame.event.pump()
