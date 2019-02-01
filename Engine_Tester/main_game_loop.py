@@ -126,9 +126,12 @@ indices = [
 """
 
 # Takes model data and turns in into a model ready to be rendered
-model = OBJLoader.load_obj_model("dragon", loader)
+model = OBJLoader.load_obj_model("stall", loader)
 
-static_model = TexturedModel(model, ModelTexture(loader.load_texture("white_texture")))
+static_model = TexturedModel(model, ModelTexture(loader.load_texture("stall_texture")))
+texture = static_model.texture
+texture.shine_damper = 10
+texture.reflectivity = 1
 
 entity = Entity(static_model, [0, 0, -25], 0, 0, 0, 1)
 light = Light([0, 0, -20], [1, 1, 1])

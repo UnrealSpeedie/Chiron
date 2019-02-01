@@ -42,7 +42,8 @@ class Renderer:
             entity.position, entity.rotation[0], entity.rotation[1], entity.rotation[2], entity.scale
         )
         shader.load_transformation_matrix(transformation_matrix)
-
+        texture = model.texture
+        shader.load_shine_variables(texture.shine_damper, texture.reflectivity)
         glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, model.texture.texture_id)
         # This is slightly different from LWJGL's glDrawElements, as it needs the vertices also
