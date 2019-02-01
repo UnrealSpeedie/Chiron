@@ -61,7 +61,7 @@ class OBJLoader:
         for i in range(0, len(indices)):
             indices_array[i] = indices[i]
 
-        return loader.load_to_vao(vertices_array, textures_array, indices_array)
+        return loader.load_to_vao(vertices_array, textures_array, normals_array, indices_array)
 
     @staticmethod
     def process_vertex(vertex_data, indices, textures, normals, texture_array, normals_array):

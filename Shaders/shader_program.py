@@ -51,7 +51,7 @@ class ShaderProgram:
 
     @staticmethod
     def load_vector(location, vector):
-        glUniform3f(location, vector)
+        glUniform3f(location, vector[0], vector[1], vector[2])
 
     @staticmethod
     def load_boolean(location, value):

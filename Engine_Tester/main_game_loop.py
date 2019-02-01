@@ -7,6 +7,7 @@ from Models.textured_model import TexturedModel
 from Entities.entity import Entity
 from Entities.camera import Camera
 from Render_Engine.obj_loader import OBJLoader
+from Entities.light import Light
 
 
 # Initialize Pygame
@@ -125,11 +126,12 @@ indices = [
 """
 
 # Takes model data and turns in into a model ready to be rendered
-model = OBJLoader.load_obj_model("stall", loader)
+model = OBJLoader.load_obj_model("dragon", loader)
 
-static_model = TexturedModel(model, ModelTexture(loader.load_texture("stall_texture")))
+static_model = TexturedModel(model, ModelTexture(loader.load_texture("white_texture")))
 
-entity = Entity(static_model, [0, 0, -50], 0, 0, 0, 1)
+entity = Entity(static_model, [0, 0, -25], 0, 0, 0, 1)
+light = Light([0, 0, -20], [1, 1, 1])
 
 camera = Camera()
 
@@ -186,6 +188,9 @@ if __name__ == "__main__":
 
         # Starts the shader program
         shader.start()
+
+        # Loads a light to the frame
+        shader.load_light(light)
 
         # Camera view matrix update
         shader.load_view_matrix(camera)

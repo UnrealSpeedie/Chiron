@@ -43,11 +43,12 @@ class Loader:
         map(glDeleteTextures, Loader._textures)
 
     @staticmethod
-    def load_to_vao(positions, texture_coords, indices) -> RawModel:
+    def load_to_vao(positions, texture_coords, normals, indices) -> RawModel:
         vao_id = Loader._create_vao()
         Loader._bind_indices_buffer(indices)
         Loader._store_data_in_attribute_list(0, 3, positions, np.float32)
         Loader._store_data_in_attribute_list(1, 2, texture_coords, np.float32)
+        Loader._store_data_in_attribute_list(2, 3, normals, np.float32)
         Loader._unbind_vao()
         return RawModel(vao_id, indices)
 

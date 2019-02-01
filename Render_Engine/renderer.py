@@ -26,7 +26,7 @@ class Renderer:
     @staticmethod
     def prepare():
         glEnable(GL_DEPTH_TEST)
-        glClearColor(0, 0, 0, 1)
+        glClearColor(1, 0, 0, 1)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     @staticmethod
@@ -34,8 +34,9 @@ class Renderer:
         model = entity.model
         raw_model = model.raw_model
         glBindVertexArray(raw_model.vao_id)
-        glEnableVertexAttribArray(0)
-        glEnableVertexAttribArray(1)
+        glEnableVertexAttribArray(0)    # enables positions
+        glEnableVertexAttribArray(1)    # enables texture coordinates
+        glEnableVertexAttribArray(2)    # enables normals
 
         transformation_matrix = Maths.create_transformation_matrix(
             entity.position, entity.rotation[0], entity.rotation[1], entity.rotation[2], entity.scale
@@ -48,6 +49,7 @@ class Renderer:
         glDrawElements(GL_TRIANGLES, raw_model.vertex_count, GL_UNSIGNED_INT, raw_model.vertices)
         glDisableVertexAttribArray(0)
         glDisableVertexAttribArray(1)
+        glDisableVertexAttribArray(2)
         glBindVertexArray(0)
 
     @staticmethod
