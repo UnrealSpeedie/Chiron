@@ -15,11 +15,11 @@ class Loader:
     _textures = []
 
     @staticmethod
-    def load_texture(file_name) -> int:
+    def load_texture(file_name, image_format) -> int:
         texture_id = glGenTextures(1)
         Loader._textures.append(texture_id)
 
-        texture = pygame.image.load("../res/{}.png".format(file_name))
+        texture = pygame.image.load("../res/{}.{}".format(file_name, image_format))
         texture_data = pygame.image.tostring(texture, "RGBA", True)
         width = texture.get_width()
         height = texture.get_height()

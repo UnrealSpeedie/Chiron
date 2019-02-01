@@ -1,7 +1,6 @@
 from Render_Engine.display_manager import *
 from Render_Engine.loader import Loader
-from Render_Engine.renderer import Renderer
-from Shaders.static_shader import StaticShader
+from Render_Engine.master_renderer import MasterRenderer
 from Textures.model_texture import ModelTexture
 from Models.textured_model import TexturedModel
 from Entities.entity import Entity
@@ -20,123 +19,39 @@ display.create_display()
 # Creates a loader to load model data
 loader = Loader()
 
-# Loads shaders
-shader = StaticShader()
-
-# Initializes the renderer
-renderer = Renderer(shader)
-
-# Test rectangle
-"""
-vertices = [
-    -0.5, 0.5, 0,
-    -0.5, -0.5, 0,
-    0.5, -0.5, 0,
-    0.5, 0.5, 0
-]
-
-indices = [
-    0, 1, 3,
-    3, 1, 2
-]
-
-texture_coords = [
-    0, 0,
-    0, 1,
-    1, 1,
-    1, 0
-]
-"""
-
-# Test cube
-"""
-vertices = [
-    -0.5, 0.5, -0.5,
-    -0.5, -0.5, -0.5,
-    0.5, -0.5, -0.5,
-    0.5, 0.5, -0.5,
-
-    -0.5, 0.5, 0.5,
-    -0.5, -0.5, 0.5,
-    0.5, -0.5, 0.5,
-    0.5, 0.5, 0.5,
-
-    0.5, 0.5, -0.5,
-    0.5, -0.5, -0.5,
-    0.5, -0.5, 0.5,
-    0.5, 0.5, 0.5,
-
-    -0.5, 0.5, -0.5,
-    -0.5, -0.5, -0.5,
-    -0.5, -0.5, 0.5,
-    -0.5, 0.5, 0.5,
-
-    -0.5, 0.5, 0.5,
-    -0.5, 0.5, -0.5,
-    0.5, 0.5, -0.5,
-    0.5, 0.5, 0.5,
-
-    -0.5, -0.5, 0.5,
-    -0.5, -0.5, -0.5,
-    0.5, -0.5, -0.5,
-    0.5, -0.5, 0.5
-]
-
-texture_coords = [
-    0, 0,
-    0, 1,
-    1, 1,
-    1, 0,
-    0, 0,
-    0, 1,
-    1, 1,
-    1, 0,
-    0, 0,
-    0, 1,
-    1, 1,
-    1, 0,
-    0, 0,
-    0, 1,
-    1, 1,
-    1, 0,
-    0, 0,
-    0, 1,
-    1, 1,
-    1, 0,
-    0, 0,
-    0, 1,
-    1, 1,
-    1, 0
-]
-
-indices = [
-    0, 1, 3,
-    3, 1, 2,
-    4, 5, 7,
-    7, 5, 6,
-    8, 9, 11,
-    11, 9, 10,
-    12, 13, 15,
-    15, 13, 14,
-    16, 17, 19,
-    19, 17, 18,
-    20, 21, 23,
-    23, 21, 22
-]
-"""
-
 # Takes model data and turns in into a model ready to be rendered
 model = OBJLoader.load_obj_model("stall", loader)
+static_model = TexturedModel(model, ModelTexture(loader.load_texture("stall_texture", "png")))
 
-static_model = TexturedModel(model, ModelTexture(loader.load_texture("stall_texture")))
+model1 = OBJLoader.load_obj_model("cube", loader)
+static_model1 = TexturedModel(model1, ModelTexture(loader.load_texture("cube_texture", "jpg")))
+
+# Sets texture shininess
 texture = static_model.texture
 texture.shine_damper = 10
 texture.reflectivity = 1
 
-entity = Entity(static_model, [0, 0, -25], 0, 0, 0, 1)
+texture1 = static_model1.texture
+texture1.shine_damper = 10
+texture1.reflectivity = 1
+
+# Makes an entity with the static model and positions ir
+# entity = Entity(static_model, [0, 0, -25], 0, 0, 0, 1)
+
+# Makes multiple entities
+entities = []
+for i in range(0, 3):
+    entities.append(Entity(static_model, [10-(10*i), 0, -25], 0, 0, 0, 1))
+    entities.append(Entity(static_model1, [10-(10*i), 10, -25], 0, 0, 0, 1))
+
+# Scene light
 light = Light([0, 0, -20], [1, 1, 1])
 
+# The view camera
 camera = Camera()
+
+# The renderer
+renderer = MasterRenderer()
 
 # Beginning!
 if __name__ == "__main__":
@@ -149,7 +64,7 @@ if __name__ == "__main__":
 
             # When window is closed
             if event.type == pygame.QUIT:
-                shader.clean_up()
+                renderer.clean_up()
                 loader.clean_up()
                 display.close_display()
                 pygame.quit()
@@ -169,6 +84,12 @@ if __name__ == "__main__":
                 if event.key == pygame.K_d:
                     camera.strafe = camera.move_speed
 
+                if event.key == pygame.K_SPACE:
+                    camera.height = camera.move_speed
+
+                if event.key == pygame.K_c:
+                    camera.height = -camera.move_speed
+
             # Key release logic
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_w:
@@ -183,28 +104,22 @@ if __name__ == "__main__":
                 if event.key == pygame.K_d:
                     camera.strafe = 0
 
+                if event.key == pygame.K_SPACE:
+                    camera.height = 0
+
+                if event.key == pygame.K_c:
+                    camera.height = 0
+
         # Camera movement
         camera.move()
 
-        # Prepares OpenGL context
-        renderer.prepare()
+        # Multiple entity render
+        for entity in entities:
+            renderer.process_entity(entity)
+            entity.increase_rotation(0, 1, 0)
 
-        # Starts the shader program
-        shader.start()
-
-        # Loads a light to the frame
-        shader.load_light(light)
-
-        # Camera view matrix update
-        shader.load_view_matrix(camera)
-
-        # Renders a model
-        renderer.render(entity, shader)
-
-        entity.increase_rotation(0, 1, 0)
-
-        # Stops te shader program
-        shader.stop()
+        # Render entities
+        renderer.render(light, camera)
 
         # Update the Pygame display
         display.update_display()

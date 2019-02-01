@@ -10,14 +10,16 @@ class Camera:
         self._yaw = 0
         self._roll = 0
 
-        self._move_speed = 0.2
+        self._move_speed = 0.1
 
         self._speed = 0
         self._strafe = 0
+        self._height = 0
 
     def move(self):
         self.position.z += self._speed
         self.position.x += self._strafe
+        self.position.y += self._height
 
     @property
     def position(self):
@@ -47,6 +49,10 @@ class Camera:
     def strafe(self):
         return self._strafe
 
+    @property
+    def height(self):
+        return self._height
+
     @speed.setter
     def speed(self, value):
         self._speed = value
@@ -54,3 +60,7 @@ class Camera:
     @strafe.setter
     def strafe(self, value):
         self._strafe = value
+
+    @height.setter
+    def height(self, value):
+        self._height = value

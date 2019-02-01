@@ -15,12 +15,14 @@ class Renderer:
     _near_plane = 0.1
     _far_plane = 1000
 
-    _projection_matrix = None
-
     def __init__(self, shader):
-        Renderer.create_projection_matrix()
+        self._projection_matrix = None
+        self._shader = shader
+        glEnable(GL_CULL_FACE)
+        glCullFace(GL_BACK)
+        self.create_projection_matrix()
         shader.start()
-        shader.load_projection_matrix(Renderer._projection_matrix)
+        shader.load_projection_matrix(self._projection_matrix)
         shader.stop()
 
     @staticmethod
@@ -29,34 +31,43 @@ class Renderer:
         glClearColor(1, 0, 0, 1)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-    @staticmethod
-    def render(entity, shader):
-        model = entity.model
+    def render(self, entities):
+        for model in entities.keys():
+            self.prepare_textured_model(model)
+            batch = entities.get(model)
+            for entity in batch:
+                self.prepare_instance(entity)
+                glDrawElements(GL_TRIANGLES, model.raw_model.vertex_count, GL_UNSIGNED_INT, model.raw_model.vertices)
+
+        self.unbind_textured_model()
+
+    def prepare_textured_model(self, model):
         raw_model = model.raw_model
         glBindVertexArray(raw_model.vao_id)
-        glEnableVertexAttribArray(0)    # enables positions
-        glEnableVertexAttribArray(1)    # enables texture coordinates
-        glEnableVertexAttribArray(2)    # enables normals
-
-        transformation_matrix = Maths.create_transformation_matrix(
-            entity.position, entity.rotation[0], entity.rotation[1], entity.rotation[2], entity.scale
-        )
-        shader.load_transformation_matrix(transformation_matrix)
+        glEnableVertexAttribArray(0)  # enables positions
+        glEnableVertexAttribArray(1)  # enables texture coordinates
+        glEnableVertexAttribArray(2)  # enables normals
         texture = model.texture
-        shader.load_shine_variables(texture.shine_damper, texture.reflectivity)
+        self._shader.load_shine_variables(texture.shine_damper, texture.reflectivity)
         glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, model.texture.texture_id)
-        # This is slightly different from LWJGL's glDrawElements, as it needs the vertices also
-        glDrawElements(GL_TRIANGLES, raw_model.vertex_count, GL_UNSIGNED_INT, raw_model.vertices)
+
+    @staticmethod
+    def unbind_textured_model():
         glDisableVertexAttribArray(0)
         glDisableVertexAttribArray(1)
         glDisableVertexAttribArray(2)
         glBindVertexArray(0)
 
-    @staticmethod
-    def create_projection_matrix():
+    def prepare_instance(self, entity):
+        transformation_matrix = Maths.create_transformation_matrix(
+            entity.position, entity.rotation[0], entity.rotation[1], entity.rotation[2], entity.scale
+        )
+        self._shader.load_transformation_matrix(transformation_matrix)
+
+    def create_projection_matrix(self):
         dm = DisplayManager()
-        Renderer._projection_matrix = Matrix44
-        Renderer._projection_matrix = Renderer._projection_matrix.perspective_projection(
+        self._projection_matrix = Matrix44
+        self._projection_matrix = self._projection_matrix.perspective_projection(
             Renderer._fov, dm.aspect_ratio, Renderer._near_plane, Renderer._far_plane, dtype=np.float32
         )
