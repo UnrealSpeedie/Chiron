@@ -11,6 +11,8 @@ from Entities.light import Light
 
 # Initialize Pygame
 pygame.init()
+pygame.event.set_grab(True)
+pygame.mouse.set_visible(False)
 
 # Create the Pygame display and OpenGl context
 display = DisplayManager()
@@ -22,21 +24,15 @@ loader = Loader()
 # Takes model data and turns in into a model ready to be rendered
 model = OBJLoader.load_obj_model("stall", loader)
 static_model = TexturedModel(model, ModelTexture(loader.load_texture("stall_texture", "png")))
-
-model1 = OBJLoader.load_obj_model("cube", loader)
-static_model1 = TexturedModel(model1, ModelTexture(loader.load_texture("cube_texture", "jpg")))
-
-# Sets texture shininess
 texture = static_model.texture
 texture.shine_damper = 10
 texture.reflectivity = 1
 
+model1 = OBJLoader.load_obj_model("cube", loader)
+static_model1 = TexturedModel(model1, ModelTexture(loader.load_texture("cube_texture", "jpg")))
 texture1 = static_model1.texture
 texture1.shine_damper = 10
 texture1.reflectivity = 1
-
-# Makes an entity with the static model and positions ir
-# entity = Entity(static_model, [0, 0, -25], 0, 0, 0, 1)
 
 # Makes multiple entities
 entities = []
@@ -72,6 +68,13 @@ if __name__ == "__main__":
 
             # Key press logic
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    renderer.clean_up()
+                    loader.clean_up()
+                    display.close_display()
+                    pygame.quit()
+                    quit()
+
                 if event.key == pygame.K_w:
                     camera.speed = -camera.move_speed
 
@@ -116,7 +119,7 @@ if __name__ == "__main__":
         # Multiple entity render
         for entity in entities:
             renderer.process_entity(entity)
-            entity.increase_rotation(0, 1, 0)
+            #entity.increase_rotation(0, 1, 0)
 
         # Render entities
         renderer.render(light, camera)

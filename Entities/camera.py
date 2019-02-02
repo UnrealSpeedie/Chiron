@@ -10,6 +10,9 @@ class Camera:
         self._yaw = 0
         self._roll = 0
 
+        self._pitch_sensitivity = 0.2
+        self._yaw_sensitivity = 0.2
+
         self._move_speed = 0.1
 
         self._speed = 0
@@ -17,9 +20,14 @@ class Camera:
         self._height = 0
 
     def move(self):
-        self.position.z += self._speed
-        self.position.x += self._strafe
-        self.position.y += self._height
+        self._position.z += self._speed
+        self._position.x += self._strafe
+        self._position.y += self._height
+
+        # Oddly, mouse input has to be collected in camera?
+        mouse_rel = pygame.mouse.get_rel()
+        self._pitch += -mouse_rel[1] * self._pitch_sensitivity
+        self._yaw += -mouse_rel[0] * self._yaw_sensitivity
 
     @property
     def position(self):
@@ -64,3 +72,11 @@ class Camera:
     @height.setter
     def height(self, value):
         self._height = value
+
+    @pitch.setter
+    def pitch(self, value):
+        self._pitch = value * self._pitch_sensitivity
+
+    @yaw.setter
+    def yaw(self, value):
+        self._yaw = value * self._yaw_sensitivity
