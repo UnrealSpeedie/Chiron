@@ -1,11 +1,9 @@
-import numpy as np
 import pygame
-from pyrr import Vector3
 
 
 class Camera:
     def __init__(self):
-        self._position = Vector3([0, 0, 0], dtype=np.float32)
+        self._position = [0, 0, 0]
         self._pitch = 0
         self._yaw = 0
         self._roll = 0
@@ -20,9 +18,9 @@ class Camera:
         self._height = 0
 
     def move(self):
-        self._position.z += self._speed
-        self._position.x += self._strafe
-        self._position.y += self._height
+        self._position[2] += self._speed
+        self._position[0] += self._strafe
+        self._position[1] += self._height
 
         # Oddly, mouse input has to be collected in camera?
         mouse_rel = pygame.mouse.get_rel()

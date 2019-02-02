@@ -63,8 +63,7 @@ class ShaderProgram:
 
     @staticmethod
     def load_matrix(location, matrix):
-        ShaderProgram.matrix_buffer = np.array(matrix, dtype=np.float32).reshape(4, 4)
-        glUniformMatrix4fv(location, 1, GL_FALSE, ShaderProgram.matrix_buffer)
+        glUniformMatrix4fv(location, 1, GL_FALSE, np.array(matrix, dtype=np.float32).reshape(4, 4))
 
     @staticmethod
     def _load_shader(file, shader_type):

@@ -18,13 +18,10 @@ class MasterRenderer:
         self.entities.clear()
 
     def process_entity(self, entity):
-        entity_model = entity.model
-        batch = self.entities.get(entity_model)
-        if batch is not None:
-            batch.append(entity)
+        if self.entities.get(entity.model) is not None:
+            self.entities.get(entity.model).append(entity)
         else:
-            new_batch = [entity]
-            self.entities.update({entity_model: new_batch})
+            self.entities.update({entity.model: [entity]})
 
     def clean_up(self):
         self.shader.clean_up()

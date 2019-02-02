@@ -9,12 +9,12 @@ from Render_Engine.obj_loader import OBJLoader
 from Entities.light import Light
 
 
-# Initialize Pygame
+# Initialize pygame
 pygame.init()
 pygame.event.set_grab(True)
 pygame.mouse.set_visible(False)
 
-# Create the Pygame display and OpenGl context
+# Create the pygame display and OpenGl context
 display = DisplayManager()
 display.create_display()
 
@@ -119,12 +119,12 @@ if __name__ == "__main__":
         # Multiple entity render
         for entity in entities:
             renderer.process_entity(entity)
-            #entity.increase_rotation(0, 1, 0)
+            entity.increase_rotation(0, 1, 0)
 
         # Render entities
         renderer.render(light, camera)
 
-        # Update the Pygame display
+        # Update the pygame display
         display.update_display()
 
         # Pumps event messages from event queue
