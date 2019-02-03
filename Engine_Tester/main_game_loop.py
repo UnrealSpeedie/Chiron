@@ -7,6 +7,7 @@ from Entities.entity import Entity
 from Entities.camera import Camera
 from Render_Engine.obj_loader import OBJLoader
 from Entities.light import Light
+from Terrain.terrain import Terrain
 
 
 # Initialize pygame
@@ -41,7 +42,11 @@ for i in range(0, 3):
     entities.append(Entity(static_model1, [10-(10*i), 10, -25], 0, 0, 0, 1))
 
 # Scene light
-light = Light([0, 0, -20], [1, 1, 1])
+light = Light([30, 30, 20], [1, 1, 1])
+
+# Terrain
+terrain = Terrain(0, 0, loader, ModelTexture(loader.load_texture("image", "png")))
+terrain2 = Terrain(1, 0, loader, ModelTexture(loader.load_texture("image", "png")))
 
 # The view camera
 camera = Camera()
@@ -117,6 +122,9 @@ if __name__ == "__main__":
         camera.move()
 
         # Multiple entity render
+        renderer.process_terrain(terrain)
+        renderer.process_terrain(terrain2)
+
         for entity in entities:
             renderer.process_entity(entity)
             entity.increase_rotation(0, 1, 0)
