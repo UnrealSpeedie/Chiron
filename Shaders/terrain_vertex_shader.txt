@@ -18,7 +18,10 @@ void main(void){
 
     vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
     gl_Position = projectionMatrix * viewMatrix * worldPosition;
-    pass_textureCoords = textureCoords;
+
+    // The last number is how many time to times the texture coords, this produces a
+    // tiling affect rather than a stretching
+    pass_textureCoords = textureCoords * 5.0;
 
     surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
     toLightVector = lightPosition - worldPosition.xyz;

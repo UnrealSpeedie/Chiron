@@ -59,6 +59,10 @@ class Camera:
     def height(self):
         return self._height
 
+    @position.setter
+    def position(self, value):
+        self._position = value
+
     @speed.setter
     def speed(self, value):
         self._speed = value

@@ -35,21 +35,32 @@ texture1 = static_model1.texture
 texture1.shine_damper = 10
 texture1.reflectivity = 1
 
+model2 = OBJLoader.load_obj_model("tree", loader)
+static_model2 = TexturedModel(model2, ModelTexture(loader.load_texture("tree", "png")))
+texture2 = static_model2.texture
+texture2.shine_damper = 10
+texture2.reflectivity = 1
+
 # Makes multiple entities
 entities = []
-for i in range(0, 3):
-    entities.append(Entity(static_model, [10-(10*i), 0, -25], 0, 0, 0, 1))
-    entities.append(Entity(static_model1, [10-(10*i), 10, -25], 0, 0, 0, 1))
+entities.append(Entity(static_model, [0, 0, -15], 0, 180, 0, 1))
+entities.append(Entity(static_model1, [10, 2, -15], 0, 20, 0, 2))
+entities.append(Entity(static_model1, [7, .5, -15], 0, 0, 0, .5))
+entities.append(Entity(static_model1, [12, 1, -11], 0, 0, 0, 1))
+entities.append(Entity(static_model2, [-8.5, 0, -14], 0, 0, 0, 6))
+
+
+
+# Makes multiple terrain tiles
+terrains = []
+terrains.append(Terrain(0.5, 0, loader, ModelTexture(loader.load_texture("grass", "png"))))
 
 # Scene light
 light = Light([30, 30, 20], [1, 1, 1])
 
-# Terrain
-terrain = Terrain(0, 0, loader, ModelTexture(loader.load_texture("image", "png")))
-terrain2 = Terrain(1, 0, loader, ModelTexture(loader.load_texture("image", "png")))
-
 # The view camera
 camera = Camera()
+camera.position = [0, 3, 0]
 
 # The renderer
 renderer = MasterRenderer()
@@ -121,13 +132,13 @@ if __name__ == "__main__":
         # Camera movement
         camera.move()
 
-        # Multiple entity render
-        renderer.process_terrain(terrain)
-        renderer.process_terrain(terrain2)
+        # Multiple entity terrain/render
+        for terrain in terrains:
+            renderer.process_terrain(terrain)
 
         for entity in entities:
             renderer.process_entity(entity)
-            entity.increase_rotation(0, 1, 0)
+            #entity.increase_rotation(0, 1, 0)
 
         # Render entities
         renderer.render(light, camera)
