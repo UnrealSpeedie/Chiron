@@ -10,7 +10,7 @@ from Render_Engine.terrain_renderer import TerrainRenderer
 
 
 class MasterRenderer:
-    _fov = 70
+    _fov = 90
     _near_plane = 0.1
     _far_plane = 1000
 
@@ -19,8 +19,7 @@ class MasterRenderer:
     def __init__(self):
         # Specific for pygame
         self.aspect_ratio = DisplayManager().aspect_ratio
-        glEnable(GL_CULL_FACE)
-        glCullFace(GL_BACK)
+        self.enable_culling()
         self.terrain_shader = TerrainShader()
         self.create_projection_matrix()
         self.shader = StaticShader()
@@ -29,6 +28,15 @@ class MasterRenderer:
 
         self.entities = {}
         self.terrains = []
+
+    @staticmethod
+    def enable_culling():
+        glEnable(GL_CULL_FACE)
+        glCullFace(GL_BACK)
+
+    @staticmethod
+    def disable_culling():
+        glDisable(GL_CULL_FACE)
 
     def render(self, sun, camera):
         self.prepare()
@@ -64,7 +72,7 @@ class MasterRenderer:
     @staticmethod
     def prepare():
         glEnable(GL_DEPTH_TEST)
-        glClearColor(1, 0, 0, 1)
+        glClearColor(.50, .50, .75, 1)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     def create_projection_matrix(self):

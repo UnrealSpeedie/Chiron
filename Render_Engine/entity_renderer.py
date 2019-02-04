@@ -12,6 +12,19 @@ class Renderer:
         shader.load_projection_matrix(projection_matrix)
         shader.stop()
 
+    # Method moved from master_renderer to here, as python seems different on calling static methods from
+    # non-instanced classes?
+    @staticmethod
+    def enable_culling():
+        glEnable(GL_CULL_FACE)
+        glCullFace(GL_BACK)
+
+    # Method moved from master_renderer to here, as python seems different on calling static methods from
+    # non-instanced classes?
+    @staticmethod
+    def disable_culling():
+        glDisable(GL_CULL_FACE)
+
     def render(self, entities):
         for model in entities.keys():
             self.prepare_textured_model(model)
@@ -26,12 +39,18 @@ class Renderer:
         glEnableVertexAttribArray(0)  # enables positions
         glEnableVertexAttribArray(1)  # enables texture coordinates
         glEnableVertexAttribArray(2)  # enables normals
+        if model.texture.has_transparency:
+            Renderer.disable_culling()
+
+        print(model.texture.use_fake_lighting)
+        self._shader.load_fake_lighting_variable(model.texture.use_fake_lighting)
         self._shader.load_shine_variables(model.texture.shine_damper, model.texture.reflectivity)
         glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, model.texture.texture_id)
 
     @staticmethod
     def unbind_textured_model():
+        Renderer.enable_culling()
         glDisableVertexAttribArray(0)
         glDisableVertexAttribArray(1)
         glDisableVertexAttribArray(2)
