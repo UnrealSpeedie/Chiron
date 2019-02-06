@@ -15,7 +15,7 @@ class ShaderProgram:
         self.bind_attributes()
         glLinkProgram(self.program_id)
         glValidateProgram(self.program_id)
-        self.get_all_uniform_locations()
+        # self.get_all_uniform_locations()
 
     # This should(tm) be implemented when instanced
     def get_all_uniform_locations(self):

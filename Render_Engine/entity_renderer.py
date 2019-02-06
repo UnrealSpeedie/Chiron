@@ -42,7 +42,6 @@ class Renderer:
         if model.texture.has_transparency:
             Renderer.disable_culling()
 
-        print(model.texture.use_fake_lighting)
         self._shader.load_fake_lighting_variable(model.texture.use_fake_lighting)
         self._shader.load_shine_variables(model.texture.shine_damper, model.texture.reflectivity)
         glActiveTexture(GL_TEXTURE0)

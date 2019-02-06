@@ -16,6 +16,10 @@ class MasterRenderer:
 
     _projection_matrix = None
 
+    _red = 0.5
+    _green = 0.5
+    _blue = 0.5
+
     def __init__(self):
         # Specific for pygame
         self.aspect_ratio = DisplayManager().aspect_ratio
@@ -41,6 +45,7 @@ class MasterRenderer:
     def render(self, sun, camera):
         self.prepare()
         self.shader.start()
+        self.shader.load_sky_colour(MasterRenderer._red, MasterRenderer._green, MasterRenderer._blue)
         self.shader.load_light(sun)
         self.shader.load_view_matrix(camera)
         self.renderer.render(self.entities)
@@ -48,6 +53,7 @@ class MasterRenderer:
 
         # Terrain rendering
         self.terrain_shader.start()
+        self.terrain_shader.load_sky_colour(MasterRenderer._red, MasterRenderer._green, MasterRenderer._blue)
         self.terrain_shader.load_light(sun)
         self.terrain_shader.load_view_matrix(camera)
         self.terrain_renderer.render(self.terrains)
@@ -72,7 +78,7 @@ class MasterRenderer:
     @staticmethod
     def prepare():
         glEnable(GL_DEPTH_TEST)
-        glClearColor(.50, .50, .75, 1)
+        glClearColor(MasterRenderer._red, MasterRenderer._green, MasterRenderer._blue, 1)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     def create_projection_matrix(self):

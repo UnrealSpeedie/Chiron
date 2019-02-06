@@ -16,25 +16,27 @@ class StaticShader(ShaderProgram):
         self.location_shine_damper = super().get_uniform_location("shineDamper")
         self.location_reflectivity = super().get_uniform_location("reflectivity")
         self.location_use_fake_lighting = super().get_uniform_location("useFakeLighting")
-
+        self.location_sky_colour = super().get_uniform_location("skyColour")
 
     def bind_attributes(self):
         super().bind_attribute(0, "position")
         super().bind_attribute(1, "textureCoords")
         super().bind_attribute(2, "normal")
 
-
     # TODO PERHAPS MAKE IT WORK?
     # This function need to bee modified to work and it is not called, but will be implemented for posterity
-    def get_all_uniform_locations(self):
-        self.location_transformation_matrix = super().get_uniform_location("transformationMatrix")
-        self.location_projection_matrix = super().get_uniform_location("projectionMatrix")
-        self.location_view_matrix = super().get_uniform_location("viewMatrix")
-        self.location_light_position = super().get_uniform_location("lightPosition")
-        self.location_light_colour = super().get_uniform_location("lightColour")
-        self.location_shine_damper = super().get_uniform_location("shineDamper")
-        self.location_reflectivity = super().get_uniform_location("reflectivity")
-        self.location_use_fake_lighting = super().get_uniform_location("useFakeLighting")
+    # def get_all_uniform_locations(self):
+    #     self.location_transformation_matrix = super().get_uniform_location("transformationMatrix")
+    #     self.location_projection_matrix = super().get_uniform_location("projectionMatrix")
+    #     self.location_view_matrix = super().get_uniform_location("viewMatrix")
+    #     self.location_light_position = super().get_uniform_location("lightPosition")
+    #     self.location_light_colour = super().get_uniform_location("lightColour")
+    #     self.location_shine_damper = super().get_uniform_location("shineDamper")
+    #     self.location_reflectivity = super().get_uniform_location("reflectivity")
+    #     self.location_use_fake_lighting = super().get_uniform_location("useFakeLighting")
+
+    def load_sky_colour(self, r, g, b):
+        super().load_vector(self.location_sky_colour, [r, g, b])
 
     def load_fake_lighting_variable(self, use_fake):
         super().load_boolean(self.location_use_fake_lighting, use_fake)
