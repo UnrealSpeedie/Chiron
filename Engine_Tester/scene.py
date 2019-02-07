@@ -1,9 +1,10 @@
-from Render_Engine.obj_loader import OBJLoader
+# from Render_Engine.obj_loader import OBJLoader    # Old way
 from Models.textured_model import TexturedModel
 from Textures.model_texture import ModelTexture
 from Render_Engine.loader import Loader
 from Entities.entity import Entity
 from Terrain.terrain import Terrain
+from OBJ_Converter.obj_file_loader import OBJFileLoader
 
 
 class Scene:
@@ -13,25 +14,29 @@ class Scene:
         self.terrains = []
 
     def scene1(self):
-        model = OBJLoader.load_obj_model("stall", self.loader)
+        model = OBJFileLoader.model_data("stall")
+        model = self.loader.load_model_to_vao(model)
         static_model = TexturedModel(model, ModelTexture(self.loader.load_texture("stall_texture", "png")))
         texture = static_model.texture
         texture.shine_damper = 10
         texture.reflectivity = 1
 
-        model1 = OBJLoader.load_obj_model("cube", self.loader)
+        model1 = OBJFileLoader.model_data("cube")
+        model1 = self.loader.load_model_to_vao(model1)
         static_model1 = TexturedModel(model1, ModelTexture(self.loader.load_texture("cube_texture", "jpg")))
         texture1 = static_model1.texture
         texture1.shine_damper = 10
         texture1.reflectivity = 1
 
-        model2 = OBJLoader.load_obj_model("tree", self.loader)
+        model2 = OBJFileLoader.model_data("tree")
+        model2 = self.loader.load_model_to_vao(model2)
         static_model2 = TexturedModel(model2, ModelTexture(self.loader.load_texture("tree", "png")))
         texture2 = static_model2.texture
         texture2.shine_damper = 10
         texture2.reflectivity = 1
 
-        model3 = OBJLoader.load_obj_model("fern", self.loader)
+        model3 = OBJFileLoader.model_data("fern")
+        model3 = self.loader.load_model_to_vao(model3)
         static_model3 = TexturedModel(model3, ModelTexture(self.loader.load_texture("fern", "png")))
         texture3 = static_model3.texture
         texture3.shine_damper = 10
@@ -39,7 +44,8 @@ class Scene:
         texture3.has_transparency = True
         texture3.use_fake_lighting = True
 
-        model4 = OBJLoader.load_obj_model("grassModel", self.loader)
+        model4 = OBJFileLoader.model_data("grassModel")
+        model4 = self.loader.load_model_to_vao(model4)
         static_model4 = TexturedModel(model4, ModelTexture(self.loader.load_texture("flower", "png")))
         texture4 = static_model4.texture
         texture4.shine_damper = 10
@@ -47,7 +53,8 @@ class Scene:
         texture4.has_transparency = True
         texture4.use_fake_lighting = True
 
-        model5 = OBJLoader.load_obj_model("grassModel", self.loader)
+        model5 = OBJFileLoader.model_data("grassModel")
+        model5 = self.loader.load_model_to_vao(model5)
         static_model5 = TexturedModel(model5, ModelTexture(self.loader.load_texture("grassTexture", "png")))
         texture5 = static_model5.texture
         texture5.shine_damper = 10
