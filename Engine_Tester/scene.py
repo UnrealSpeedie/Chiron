@@ -5,6 +5,8 @@ from Render_Engine.loader import Loader
 from Entities.entity import Entity
 from Terrain.terrain import Terrain
 from OBJ_Converter.obj_file_loader import OBJFileLoader
+from Textures.terrain_texture import TerrainTexture
+from Textures.terrain_texture_pack import  TerrainTexturePack
 
 
 class Scene:
@@ -71,7 +73,17 @@ class Scene:
         self.entities.append(Entity(static_model4, [0, 0, -10], 0, 90, 0, 1))
         self.entities.append(Entity(static_model5, [0, 0, -10], 0, 0, 0, 1))
 
-        self.terrains.append(Terrain(0.5, 0, self.loader, ModelTexture(self.loader.load_texture("grass", "png"))))
+        # Terrain texture stuff
+        background_texture = TerrainTexture(self.loader.load_texture("grassy", "png"))
+        r_texture = TerrainTexture(self.loader.load_texture("mud", "png"))
+        g_texture = TerrainTexture(self.loader.load_texture("grassFlowers", "png"))
+        b_texture = TerrainTexture(self.loader.load_texture("path", "png"))
+
+        texture_pack = TerrainTexturePack(background_texture, r_texture, g_texture, b_texture)
+
+        blend_map = TerrainTexture(self.loader.load_texture("blendmap", "png"))
+
+        self.terrains.append(Terrain(0.5, 0, self.loader, texture_pack, blend_map))
 
     def load_scene_entities(self):
         return self.entities

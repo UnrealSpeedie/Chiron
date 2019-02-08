@@ -2,9 +2,10 @@ class Terrain:
     _size = 50
     _vertex_count = 8
 
-    def __init__(self, grid_x, grid_z, loader, texture):
+    def __init__(self, grid_x, grid_z, loader, texture_pack, blend_map):
         self.loader = loader
-        self._texture = texture
+        self._texture_pack = texture_pack
+        self._blend_map = blend_map
         self._x = grid_x * Terrain._size
         self._z = grid_z * Terrain._size
         self._model = self.generate_terrain(loader)
@@ -18,8 +19,12 @@ class Terrain:
         return self._model
 
     @property
-    def texture(self):
-        return self._texture
+    def texture_pack(self):
+        return self._texture_pack
+
+    @property
+    def blend_map(self):
+        return self._blend_map
 
     @property
     def x(self):

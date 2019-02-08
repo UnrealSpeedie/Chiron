@@ -50,6 +50,10 @@ class ShaderProgram:
         glUniform1f(location, value)
 
     @staticmethod
+    def load_int(location, value):
+        glUniform1i(location, value)
+
+    @staticmethod
     def load_vector(location, vector):
         glUniform3f(location, vector[0], vector[1], vector[2])
 

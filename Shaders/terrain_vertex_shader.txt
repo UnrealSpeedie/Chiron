@@ -27,7 +27,7 @@ void main(void){
 
     // The last number is how many time to times the texture coords, this produces a
     // tiling affect rather than a stretching
-    pass_textureCoords = textureCoords * 5.0;
+    pass_textureCoords = textureCoords;
 
     surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
     toLightVector = lightPosition - worldPosition.xyz;

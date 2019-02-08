@@ -8,6 +8,7 @@ class TerrainRenderer:
         self._shader = shader
         shader.start()
         shader.load_projection_matrix(projection_matrix)
+        shader.connect_texture_units()
         shader.stop()
 
     def render(self, terrains):
@@ -22,9 +23,22 @@ class TerrainRenderer:
         glEnableVertexAttribArray(0)  # enables positions
         glEnableVertexAttribArray(1)  # enables texture coordinates
         glEnableVertexAttribArray(2)  # enables normals
-        self._shader.load_shine_variables(terrain.texture.shine_damper, terrain.texture.reflectivity)
+        self.bind_textures(terrain)
+        self._shader.load_shine_variables(1, 0)
+
+    def bind_textures(self, terrain):
+        texture_pack = terrain.texture_pack
         glActiveTexture(GL_TEXTURE0)
-        glBindTexture(GL_TEXTURE_2D, terrain.texture.texture_id)
+        glBindTexture(GL_TEXTURE_2D, texture_pack.background_texture.texture_id)
+        glActiveTexture(GL_TEXTURE1)
+        glBindTexture(GL_TEXTURE_2D, texture_pack.r_texture.texture_id)
+        glActiveTexture(GL_TEXTURE2)
+        glBindTexture(GL_TEXTURE_2D, texture_pack.g_texture.texture_id)
+        glActiveTexture(GL_TEXTURE3)
+        glBindTexture(GL_TEXTURE_2D, texture_pack.b_texture.texture_id)
+        glActiveTexture(GL_TEXTURE4)
+        glBindTexture(GL_TEXTURE_2D, terrain.blend_map.texture_id)
+
 
     @staticmethod
     def unbind_textured_model():
